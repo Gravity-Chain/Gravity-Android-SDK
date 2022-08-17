@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Gravity SDK Demo</string>
+    <string name="action_settings">Settings</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">Gravity SDK Demo</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Connect Wallet to get started</string>
+    <string name="authenticate">Connect Wallet</string>
+    <string name="send_transaction">Send Transaction</string>
+    <string name="get_balance">Get Balance</string>
+    <string name="def_balance">Balance not updated</string>
+</resources>
