@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import chain.gravity.gravitysdk.Gravity
 import chain.gravity.gravitysdk.data.GravityAuth
+import chain.gravity.gravitysdk.data.GravityTransaction
 import chain.gravity.gravitysdkdemo.databinding.FragmentFirstBinding
 import java.text.DecimalFormat
 
@@ -57,29 +58,6 @@ class FirstFragment : Fragment() {
 
                 binding.textviewFirst.text = "Connected to Wallet!"
 
-                binding.buttonTxn.setOnClickListener {
-                    sendTestTransaction(
-                        sharedPreferences?.getString("gravityAuthToken", null).orEmpty()
-                    )
-                }
-
-                binding.buttonBalance.setOnClickListener {
-                    viewModel.balanceOf(
-                        sharedPreferences?.getString("gravityUserAddress", "").orEmpty(),
-                        sharedPreferences?.getString("gravityAuthToken", null).orEmpty()
-                    )
-
-                    DemoViewModel.balanceResponse.observe(viewLifecycleOwner) {
-                        if (it != null) {
-                            binding.textviewBalance.text =
-                                "Balance: ${it.to2Decimal()} GRT"
-                        } else {
-                            binding.textviewBalance.text =
-                                "Failed to fetch balance"
-                        }
-                    }
-                }
-
             } else {
                 binding.buttonFirst.visibility = View.VISIBLE
                 binding.buttonTxn.visibility = View.GONE
@@ -88,10 +66,41 @@ class FirstFragment : Fragment() {
             }
         }
 
+        binding.buttonTxn.setOnClickListener {
+            sendTestTransaction(
+                "teszterr", 5.0,
+                sharedPreferences?.getString("gravityAuthToken", null).orEmpty()
+            )
+        }
+
+        binding.buttonBalance.setOnClickListener {
+            viewModel.balanceOf(
+                sharedPreferences?.getString("gravityUserAddress", "").orEmpty(),
+                sharedPreferences?.getString("gravityAuthToken", null).orEmpty()
+            )
+
+            DemoViewModel.balanceResponse.observe(viewLifecycleOwner) {
+                if (it != null) {
+                    binding.textviewBalance.text =
+                        "Balance: ${it.to2Decimal()} GRT"
+                } else {
+                    binding.textviewBalance.text =
+                        "Failed to fetch balance"
+                }
+            }
+        }
+
     }
 
-    private fun sendTestTransaction(thirdPartyAuthToken: String) {
-        TODO("Not yet implemented")
+    private fun sendTestTransaction(
+        toAddress: String,
+        amount: Double,
+        thirdPartyAuthToken: String
+    ) {
+        Gravity.getInstance()?.sendTransaction(
+            GravityAuth("gravitysdkdemoapp://open"),
+            GravityTransaction(toAddress, amount, thirdPartyAuthToken)
+        )
     }
 
     private fun testAuthentication() {
@@ -119,6 +128,8 @@ class FirstFragment : Fragment() {
 
             binding.buttonFirst.visibility = View.GONE
             binding.buttonTxn.visibility = View.VISIBLE
+            binding.buttonBalance.visibility = View.VISIBLE
+            binding.textviewBalance.visibility = View.VISIBLE
         }
     }
 

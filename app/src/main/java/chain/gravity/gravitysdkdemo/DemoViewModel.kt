@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import chain.gravity.gravitysdk.Gravity
+import chain.gravity.gravitysdk.data.GravityBalance
 import kotlinx.coroutines.launch
 
 class DemoViewModel : ViewModel() {
@@ -15,8 +16,10 @@ class DemoViewModel : ViewModel() {
         viewModelScope.launch {
             Gravity.getInstance()
                 ?.balanceOf(
-                    userAddress,
-                    appAuthToken
+                    GravityBalance(
+                        userAddress,
+                        appAuthToken
+                    )
                 )?.onSuccess {
                     balanceResponse.postValue(it.balanceResponse?.balance)
 
