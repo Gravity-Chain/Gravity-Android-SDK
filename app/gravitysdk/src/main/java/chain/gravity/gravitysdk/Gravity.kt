@@ -15,6 +15,7 @@ import chain.gravity.gravitysdk.GravityConstants.Companion.GRAVITY_WALLET_KEY_GR
 import chain.gravity.gravitysdk.GravityConstants.Companion.GRAVITY_WALLET_KEY_GRAVITY_USER_IDENTITY
 import chain.gravity.gravitysdk.GravityConstants.Companion.GRAVITY_WALLET_KEY_PACKAGE_NAME
 import chain.gravity.gravitysdk.GravityConstants.Companion.GRAVITY_WALLET_KEY_TRANSACTION_AMOUNT
+import chain.gravity.gravitysdk.GravityConstants.Companion.GRAVITY_WALLET_KEY_TRANSACTION_STATUS
 import chain.gravity.gravitysdk.GravityConstants.Companion.GRAVITY_WALLET_KEY_TRANSACTION_TO_ADDRESS
 import chain.gravity.gravitysdk.GravityConstants.Companion.GRAVITY_WALLET_KEY_URI_SCHEME
 import chain.gravity.gravitysdk.GravityConstants.Companion.GRAVITY_WALLET_PACKAGE_NAME
@@ -55,15 +56,19 @@ class Gravity(private val activity: Activity) {
     }
 
     fun fetchData(): GravityToken? {
-        val bundle: Bundle? = activity.intent?.extras
+        val bundle: Bundle = activity.intent?.extras ?: return null
         val authToken: String? = bundle?.getString(GRAVITY_WALLET_KEY_GRAVITY_SDK_TOKEN)
         val userAddress: String? = bundle?.getString(GRAVITY_WALLET_KEY_GRAVITY_USER_ADDRESS)
         val userIdentity: String? = bundle?.getString(GRAVITY_WALLET_KEY_GRAVITY_USER_IDENTITY)
+        val walletTransactionStatus: String? = bundle?.getString(
+            GRAVITY_WALLET_KEY_TRANSACTION_STATUS
+        )
 
-        return if (authToken?.isNotEmpty() == true && userAddress?.isNotEmpty() == true && userIdentity?.isNotEmpty() == true) (GravityToken(
+        return if (authToken?.isNotEmpty() == true && userAddress?.isNotEmpty() == true) (GravityToken(
             authToken,
             userAddress,
-            userIdentity
+            userIdentity,
+            walletTransactionStatus
         )) else null
     }
 

@@ -118,18 +118,32 @@ class FirstFragment : Fragment() {
         super.onResume()
         val gravityResponse = Gravity.getInstance()?.fetchData()
         if (gravityResponse != null) {
-            binding.textviewFirst.text = "Connected to Wallet!"
 
-            val editor: SharedPreferences.Editor? = sharedPreferences?.edit()
-            editor?.putString("gravityAuthToken", gravityResponse.authToken)
-            editor?.putString("gravityUserAddress", gravityResponse.userAddress)
-            editor?.putString("gravityUserIdentity", gravityResponse.userAddress)
-            editor?.apply()
+            if (!gravityResponse.walletTransactionStatus.isNullOrEmpty()) {
+                binding.buttonFirst.visibility = View.GONE
+                binding.buttonTxn.visibility = View.VISIBLE
+                binding.buttonBalance.visibility = View.VISIBLE
+                binding.textviewBalance.visibility = View.VISIBLE
 
-            binding.buttonFirst.visibility = View.GONE
-            binding.buttonTxn.visibility = View.VISIBLE
-            binding.buttonBalance.visibility = View.VISIBLE
-            binding.textviewBalance.visibility = View.VISIBLE
+                if (gravityResponse.walletTransactionStatus.toBoolean())
+                    binding.buttonTxn.text = "Transaction Success!"
+                else
+                    binding.buttonTxn.text = "Transaction Failed!"
+
+            } else {
+                binding.textviewFirst.text = "Connected to Wallet!"
+
+                val editor: SharedPreferences.Editor? = sharedPreferences?.edit()
+                editor?.putString("gravityAuthToken", gravityResponse.authToken)
+                editor?.putString("gravityUserAddress", gravityResponse.userAddress)
+                editor?.putString("gravityUserIdentity", gravityResponse.userIdentity)
+                editor?.apply()
+
+                binding.buttonFirst.visibility = View.GONE
+                binding.buttonTxn.visibility = View.VISIBLE
+                binding.buttonBalance.visibility = View.VISIBLE
+                binding.textviewBalance.visibility = View.VISIBLE
+            }
         }
     }
 
