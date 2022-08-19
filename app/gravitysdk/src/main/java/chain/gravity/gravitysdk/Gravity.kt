@@ -15,6 +15,7 @@ import chain.gravity.gravitysdk.GravityConstants.Companion.GRAVITY_WALLET_KEY_GR
 import chain.gravity.gravitysdk.GravityConstants.Companion.GRAVITY_WALLET_KEY_GRAVITY_USER_IDENTITY
 import chain.gravity.gravitysdk.GravityConstants.Companion.GRAVITY_WALLET_KEY_PACKAGE_NAME
 import chain.gravity.gravitysdk.GravityConstants.Companion.GRAVITY_WALLET_KEY_TRANSACTION_AMOUNT
+import chain.gravity.gravitysdk.GravityConstants.Companion.GRAVITY_WALLET_KEY_TRANSACTION_ID
 import chain.gravity.gravitysdk.GravityConstants.Companion.GRAVITY_WALLET_KEY_TRANSACTION_STATUS
 import chain.gravity.gravitysdk.GravityConstants.Companion.GRAVITY_WALLET_KEY_TRANSACTION_TO_ADDRESS
 import chain.gravity.gravitysdk.GravityConstants.Companion.GRAVITY_WALLET_KEY_URI_SCHEME
@@ -23,7 +24,6 @@ import chain.gravity.gravitysdk.GravityConstants.Companion.GRAVITY_WALLET_URI_SC
 import chain.gravity.gravitysdk.data.*
 import chain.gravity.gravitysdk.retrofit.GravityAPI
 import chain.gravity.gravitysdk.retrofit.RetrofitHelper
-
 
 class Gravity(private val activity: Activity) {
     companion object : SingletonHolder<Gravity, Activity>(::Gravity)
@@ -63,12 +63,16 @@ class Gravity(private val activity: Activity) {
         val walletTransactionStatus: String? = bundle?.getString(
             GRAVITY_WALLET_KEY_TRANSACTION_STATUS
         )
+        val walletTransactionId: String? = bundle?.getString(
+            GRAVITY_WALLET_KEY_TRANSACTION_ID
+        )
 
         return if (authToken?.isNotEmpty() == true && userAddress?.isNotEmpty() == true) (GravityToken(
             authToken,
             userAddress,
             userIdentity,
-            walletTransactionStatus
+            walletTransactionStatus,
+            walletTransactionId
         )) else null
     }
 

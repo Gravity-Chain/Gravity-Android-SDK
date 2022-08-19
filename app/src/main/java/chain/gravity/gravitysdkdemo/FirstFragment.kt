@@ -45,24 +45,25 @@ class FirstFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.buttonFirst.setOnClickListener {
+        binding.btnConnectWallet.setOnClickListener {
             testAuthentication()
         }
 
         sharedPreferences?.apply {
             if (sharedPreferences?.getString("gravityAuthToken", null) != null) {
-                binding.buttonFirst.visibility = View.GONE
-                binding.buttonTxn.visibility = View.VISIBLE
-                binding.buttonBalance.visibility = View.VISIBLE
-                binding.textviewBalance.visibility = View.VISIBLE
+                binding.firstCl.visibility = View.GONE
+                binding.secondCl.visibility = View.VISIBLE
 
-                binding.textviewFirst.text = "Connected to Wallet!"
+                binding.textviewIdentity.text =
+                    sharedPreferences?.getString("gravityUserIdentity", null)
+                binding.textviewAddress.text =
+                    sharedPreferences?.getString("gravityUserAddress", null)
+                binding.textInitials.text =
+                    sharedPreferences?.getString("gravityUserIdentity", null)?.substring(0, 1)
 
             } else {
-                binding.buttonFirst.visibility = View.VISIBLE
-                binding.buttonTxn.visibility = View.GONE
-                binding.buttonBalance.visibility = View.GONE
-                binding.textviewBalance.visibility = View.GONE
+                binding.firstCl.visibility = View.VISIBLE
+                binding.secondCl.visibility = View.GONE
             }
         }
 
@@ -120,15 +121,14 @@ class FirstFragment : Fragment() {
         if (gravityResponse != null) {
 
             if (!gravityResponse.walletTransactionStatus.isNullOrEmpty()) {
-                binding.buttonFirst.visibility = View.GONE
-                binding.buttonTxn.visibility = View.VISIBLE
-                binding.buttonBalance.visibility = View.VISIBLE
-                binding.textviewBalance.visibility = View.VISIBLE
+                binding.firstCl.visibility = View.GONE
+                binding.secondCl.visibility = View.VISIBLE
 
-                if (gravityResponse.walletTransactionStatus.toBoolean())
-                    binding.buttonTxn.text = "Transaction Success!"
-                else
-                    binding.buttonTxn.text = "Transaction Failed!"
+                binding.tvAddress.text =
+                    "transaction status: ${gravityResponse.walletTransactionStatus.toBoolean()}"
+
+                binding.tvAmount.text = "transactionId: ${gravityResponse.walletTransactionId}"
+
 
             } else {
                 binding.textviewFirst.text = "Connected to Wallet!"
@@ -139,10 +139,12 @@ class FirstFragment : Fragment() {
                 editor?.putString("gravityUserIdentity", gravityResponse.userIdentity)
                 editor?.apply()
 
-                binding.buttonFirst.visibility = View.GONE
-                binding.buttonTxn.visibility = View.VISIBLE
-                binding.buttonBalance.visibility = View.VISIBLE
-                binding.textviewBalance.visibility = View.VISIBLE
+                binding.firstCl.visibility = View.GONE
+                binding.secondCl.visibility = View.VISIBLE
+
+                binding.textviewIdentity.text = gravityResponse.userIdentity
+                binding.textviewAddress.text = gravityResponse.userAddress
+                binding.textInitials.text = gravityResponse.userIdentity?.substring(0, 1)
             }
         }
     }

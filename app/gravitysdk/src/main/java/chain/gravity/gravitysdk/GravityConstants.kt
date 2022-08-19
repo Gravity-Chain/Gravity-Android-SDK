@@ -15,6 +15,7 @@ class GravityConstants {
         const val GRAVITY_WALLET_KEY_TRANSACTION_TO_ADDRESS: String = "toAddress"
         const val GRAVITY_WALLET_KEY_TRANSACTION_AMOUNT: String = "amount"
         const val GRAVITY_WALLET_KEY_TRANSACTION_STATUS: String = "walletTransactionStatus"
+        const val GRAVITY_WALLET_KEY_TRANSACTION_ID: String = "walletTransactionId"
 
         const val GRAVITY_WALLET_KEY_ACTION_AUTHENTICATE: String = "authenticate"
         const val GRAVITY_WALLET_KEY_ACTION_TRANSACTION: String = "transaction"
