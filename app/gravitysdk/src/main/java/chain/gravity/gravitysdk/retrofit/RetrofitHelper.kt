@@ -6,7 +6,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitHelper {
-    val baseUrl = "https://backkksafgjewlgjs.herokuapp.com"
+    val baseUrl = "https://devnet.api.gravitychain.xyz"
 
     val logging = HttpLoggingInterceptor()
 
