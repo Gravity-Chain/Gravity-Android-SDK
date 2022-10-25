@@ -106,7 +106,7 @@ class Gravity(private val activity: Activity) {
         activity.startActivity(intent)
     }
 
-    suspend fun balanceOf(gravityBalance: GravityBalance): Result<GravityMobileContractResponse> {
+    suspend fun balanceOf(gravityBalance: GravityBalance): Result<GravityAPIResponse> {
         val packageManager: PackageManager =
             activity.packageManager
         val packageName = activity.packageName
@@ -119,7 +119,7 @@ class Gravity(private val activity: Activity) {
 
         return RetrofitHelper.getInstance().create(GravityAPI::class.java)
             .balanceOf(
-                GravityMobileContractRequest(
+                GravitytAPIRequest(
                     GravityInfo(
                         gravityBalance.userAddress,
                         packageName,
