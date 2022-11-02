@@ -116,7 +116,7 @@ class Gravity(private val activity: Activity) {
 
     suspend fun balanceOf(owner: String): Result<GravityContractCallResponse> {
         return RetrofitHelper.getInstance().create(GravityAPI::class.java)
-            .balanceOf(owner)
+            .balanceOf(GravityRequest(owner))
     }
 
 
