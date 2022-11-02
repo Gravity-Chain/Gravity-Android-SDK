@@ -14,10 +14,16 @@ class GravityConstants {
         const val GRAVITY_WALLET_KEY_GRAVITY_USER_IDENTITY: String = "gravityUserIdentity"
         const val GRAVITY_WALLET_KEY_TRANSACTION_TO_ADDRESS: String = "toAddress"
         const val GRAVITY_WALLET_KEY_TRANSACTION_AMOUNT: String = "amount"
+        const val GRAVITY_WALLET_KEY_TRANSACTION_META: String = "amount"
         const val GRAVITY_WALLET_KEY_TRANSACTION_STATUS: String = "walletTransactionStatus"
         const val GRAVITY_WALLET_KEY_TRANSACTION_ID: String = "walletTransactionId"
 
         const val GRAVITY_WALLET_KEY_ACTION_AUTHENTICATE: String = "authenticate"
         const val GRAVITY_WALLET_KEY_ACTION_TRANSACTION: String = "transaction"
+
+        const val GRAVITY_CONTRACT_METHOD_TOTAL_SUPPLY: String = "totalSupply"
+        const val GRAVITY_CONTRACT_METHOD_TOKEN_NAME: String = "tokenName"
+        const val GRAVITY_CONTRACT_METHOD_TOKEN_SYMBOL: String = "tokenSymbol"
+        const val GRAVITY_CONTRACT_METHOD_BALANCE_OF: String = "balanceOf"
     }
 }

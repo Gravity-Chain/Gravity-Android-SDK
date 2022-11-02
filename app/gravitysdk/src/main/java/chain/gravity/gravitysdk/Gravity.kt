@@ -16,6 +16,7 @@ import chain.gravity.gravitysdk.GravityConstants.Companion.GRAVITY_WALLET_KEY_GR
 import chain.gravity.gravitysdk.GravityConstants.Companion.GRAVITY_WALLET_KEY_PACKAGE_NAME
 import chain.gravity.gravitysdk.GravityConstants.Companion.GRAVITY_WALLET_KEY_TRANSACTION_AMOUNT
 import chain.gravity.gravitysdk.GravityConstants.Companion.GRAVITY_WALLET_KEY_TRANSACTION_ID
+import chain.gravity.gravitysdk.GravityConstants.Companion.GRAVITY_WALLET_KEY_TRANSACTION_META
 import chain.gravity.gravitysdk.GravityConstants.Companion.GRAVITY_WALLET_KEY_TRANSACTION_STATUS
 import chain.gravity.gravitysdk.GravityConstants.Companion.GRAVITY_WALLET_KEY_TRANSACTION_TO_ADDRESS
 import chain.gravity.gravitysdk.GravityConstants.Companion.GRAVITY_WALLET_KEY_URI_SCHEME
@@ -24,6 +25,7 @@ import chain.gravity.gravitysdk.GravityConstants.Companion.GRAVITY_WALLET_URI_SC
 import chain.gravity.gravitysdk.data.*
 import chain.gravity.gravitysdk.retrofit.GravityAPI
 import chain.gravity.gravitysdk.retrofit.RetrofitHelper
+import com.google.gson.Gson
 
 class Gravity(private val activity: Activity) {
     companion object : SingletonHolder<Gravity, Activity>(::Gravity)
@@ -103,29 +105,61 @@ class Gravity(private val activity: Activity) {
         intent.putExtra(GRAVITY_WALLET_KEY_GRAVITY_SDK_TOKEN, gravityTransaction.appAuthToken)
         intent.putExtra(GRAVITY_WALLET_KEY_TRANSACTION_TO_ADDRESS, gravityTransaction.toAddress)
         intent.putExtra(GRAVITY_WALLET_KEY_TRANSACTION_AMOUNT, gravityTransaction.amount)
+        if (gravityTransaction.transactionMeta != null) {
+            intent.putExtra(
+                GRAVITY_WALLET_KEY_TRANSACTION_META,
+                Gson().toJson(gravityTransaction.transactionMeta)
+            )
+        }
         activity.startActivity(intent)
     }
 
-    suspend fun balanceOf(gravityBalance: GravityBalance): Result<GravityAPIResponse> {
-        val packageManager: PackageManager =
-            activity.packageManager
-        val packageName = activity.packageName
-        val appName = packageManager.getApplicationLabel(
-            packageManager.getApplicationInfo(
-                packageName,
-                PackageManager.GET_META_DATA
-            )
-        ) as String
-
+    suspend fun balanceOf(owner: String): Result<GravityContractCallResponse> {
         return RetrofitHelper.getInstance().create(GravityAPI::class.java)
-            .balanceOf(
-                GravitytAPIRequest(
-                    GravityInfo(
-                        gravityBalance.userAddress,
-                        packageName,
-                        appName,
-                        gravityBalance.appAuthToken
-                    )
+            .balanceOf(owner)
+    }
+
+
+    suspend fun getTotalSupply(contractAddress: String): Result<GravityContractCallResponse> {
+        return RetrofitHelper.getInstance().create(GravityAPI::class.java)
+            .contract(
+                GravityContractCallRequest(
+                    contractAddress,
+                    GravityConstants.GRAVITY_CONTRACT_METHOD_TOTAL_SUPPLY
+                )
+            )
+    }
+
+    suspend fun getTokenName(contractAddress: String): Result<GravityContractCallResponse> {
+        return RetrofitHelper.getInstance().create(GravityAPI::class.java)
+            .contract(
+                GravityContractCallRequest(
+                    contractAddress,
+                    GravityConstants.GRAVITY_CONTRACT_METHOD_TOKEN_NAME
+                )
+            )
+    }
+
+    suspend fun getTokenSymbol(contractAddress: String): Result<GravityContractCallResponse> {
+        return RetrofitHelper.getInstance().create(GravityAPI::class.java)
+            .contract(
+                GravityContractCallRequest(
+                    contractAddress,
+                    GravityConstants.GRAVITY_CONTRACT_METHOD_TOKEN_SYMBOL
+                )
+            )
+    }
+
+    suspend fun getBalanceOf(
+        contractAddress: String,
+        owner: String
+    ): Result<GravityContractCallResponse> {
+        return RetrofitHelper.getInstance().create(GravityAPI::class.java)
+            .contract(
+                GravityContractCallRequest(
+                    contractAddress,
+                    GravityConstants.GRAVITY_CONTRACT_METHOD_BALANCE_OF,
+                    owner
                 )
             )
     }

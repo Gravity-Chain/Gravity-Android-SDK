@@ -7,7 +7,7 @@
     <string name="next">Next</string>
     <string name="previous">Previous</string>
 
-    <string name="hello_first_fragment">welcome to Gravity SDK (Smart Mobile Contract) Demo</string>
+    <string name="hello_first_fragment">Gravity SDK Demo</string>
     <string name="authenticate">Connect Wallet</string>
     <string name="send_transaction">Send Transaction</string>
     <string name="get_balance">Get Balance</string>

@@ -11,7 +11,9 @@ import androidx.lifecycle.ViewModelProvider
 import chain.gravity.gravitysdk.Gravity
 import chain.gravity.gravitysdk.data.GravityAuth
 import chain.gravity.gravitysdk.data.GravityTransaction
+import chain.gravity.gravitysdk.data.TransactionMeta
 import chain.gravity.gravitysdkdemo.databinding.FragmentFirstBinding
+import java.math.BigDecimal
 import java.text.DecimalFormat
 
 /**
@@ -76,14 +78,13 @@ class FirstFragment : Fragment() {
 
         binding.buttonBalance.setOnClickListener {
             viewModel.balanceOf(
-                sharedPreferences?.getString("gravityUserAddress", "").orEmpty(),
-                sharedPreferences?.getString("gravityAuthToken", null).orEmpty()
+                sharedPreferences?.getString("gravityUserAddress", "").orEmpty()
             )
 
             DemoViewModel.balanceResponse.observe(viewLifecycleOwner) {
                 if (it != null) {
                     binding.textviewBalance.text =
-                        "Balance: ${it.to2Decimal()} GRT"
+                        "Balance: ${it.toDouble().to2Decimal()} GRT"
                 } else {
                     binding.textviewBalance.text =
                         "Failed to fetch balance"
@@ -91,6 +92,87 @@ class FirstFragment : Fragment() {
             }
         }
 
+        binding.cvSupply.button.setOnClickListener {
+            viewModel.getTotalSupply("0x799e8759bb2727a637d4c64ecd3138e2fd562d57")
+        }
+
+        binding.cvTokenName.button.text = "execute tokenName"
+        binding.cvTokenName.button.setOnClickListener {
+            viewModel.getTokenName("0x799e8759bb2727a637d4c64ecd3138e2fd562d57")
+        }
+
+        binding.cvTokenSymbol.button.text = "execute tokenSymbol"
+        binding.cvTokenSymbol.button.setOnClickListener {
+            viewModel.getTokenSymbol("0x799e8759bb2727a637d4c64ecd3138e2fd562d57")
+        }
+
+        binding.cvBalanceOf.button.text = "execute balanceOf"
+        binding.cvBalanceOf.tvB.text = "0xd5...c792"
+        binding.cvBalanceOf.tvB.visibility = View.VISIBLE
+        binding.cvBalanceOf.button.setOnClickListener {
+            viewModel.getBalanceOf(
+                "0x799e8759bb2727a637d4c64ecd3138e2fd562d57",
+                "0xd59aec8166e6fdba0a0ad663cfa821319d8cc792"
+            )
+        }
+
+        DemoViewModel.totalSupplyRez.observe(viewLifecycleOwner) {
+            println("rezz: $it")
+            if (it != null) {
+                binding.cvSupply.tvA.text =
+                    "Total Supply: ${BigDecimal(it).toPlainString()}"
+            } else {
+                binding.cvSupply.tvA.text =
+                    "Failed to fetch"
+            }
+        }
+
+        DemoViewModel.tokenNameRez.observe(viewLifecycleOwner) {
+            println("rezz: $it")
+            if (it != null) {
+                binding.cvTokenName.tvA.text =
+                    "Token name: $it"
+            } else {
+                binding.cvTokenName.tvA.text =
+                    "Failed to fetch"
+            }
+        }
+
+        DemoViewModel.tokenSymbolRez.observe(viewLifecycleOwner) {
+            println("rezz: $it")
+            if (it != null) {
+                binding.cvTokenSymbol.tvA.text =
+                    "Total Supply: $it"
+            } else {
+                binding.cvTokenSymbol.tvA.text =
+                    "Failed to fetch"
+            }
+        }
+
+        DemoViewModel.balanceOfRez.observe(viewLifecycleOwner) {
+            println("rezz: $it")
+            if (it != null) {
+                binding.cvBalanceOf.tvA.text =
+                    "Balance: ${BigDecimal(it).toPlainString()}"
+            } else {
+                binding.cvBalanceOf.tvA.text =
+                    "Failed to fetch"
+            }
+        }
+
+//        binding.cvSupply.button.setOnClickListener {
+//            viewModel.getTotalSupply("0x799e8759bb2727a637d4c64ecd3138e2fd562d57")
+//
+//            DemoViewModel.totalSupplyRez.observe(viewLifecycleOwner) {
+//                if (it != null) {
+//                    binding.cvSupply.tvA.text =
+//                        "Total Supply: $it"
+//                } else {
+//                    binding.textviewBalance.text =
+//                        "Failed to fetch"
+//                }
+//            }
+//        }
     }
 
     private fun sendTestTransaction(
@@ -100,7 +182,19 @@ class FirstFragment : Fragment() {
     ) {
         Gravity.getInstance()?.sendTransaction(
             GravityAuth("gravitysdkdemoapp://open"),
-            GravityTransaction(toAddress, amount, thirdPartyAuthToken)
+            GravityTransaction(toAddress, BigDecimal(amount), thirdPartyAuthToken)
+        )
+    }
+
+    private fun sendContractTestTransaction(
+        toAddress: String,
+        amount: Double,
+        thirdPartyAuthToken: String,
+        transactionMeta: TransactionMeta
+    ) {
+        Gravity.getInstance()?.sendTransaction(
+            GravityAuth("gravitysdkdemoapp://open"),
+            GravityTransaction(toAddress, BigDecimal(amount), thirdPartyAuthToken, transactionMeta)
         )
     }
 
