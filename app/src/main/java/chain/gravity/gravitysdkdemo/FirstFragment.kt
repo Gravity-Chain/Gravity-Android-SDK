@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import chain.gravity.gravitysdk.Gravity
+import chain.gravity.gravitysdk.GravityConstants
 import chain.gravity.gravitysdk.data.GravityAuth
 import chain.gravity.gravitysdk.data.GravityTransaction
 import chain.gravity.gravitysdk.data.TransactionMeta
@@ -116,6 +117,17 @@ class FirstFragment : Fragment() {
             )
         }
 
+        binding.cvSendTxnContract.button.text = "send contract transaction"
+        binding.cvSendTxnContract.tvB.text = "amount: 1GRT"
+        binding.cvSendTxnContract.tvB.visibility = View.VISIBLE
+        binding.cvSendTxnContract.button.setOnClickListener {
+            sendContractTestTransaction(
+                "teszterr", 1.0,
+                sharedPreferences?.getString("gravityAuthToken", null).orEmpty(),
+                "0x799e8759bb2727a637d4c64ecd3138e2fd562d57"
+            )
+        }
+
         DemoViewModel.totalSupplyRez.observe(viewLifecycleOwner) {
             println("rezz: $it")
             if (it != null) {
@@ -190,11 +202,16 @@ class FirstFragment : Fragment() {
         toAddress: String,
         amount: Double,
         thirdPartyAuthToken: String,
-        transactionMeta: TransactionMeta
+        contractAddress: String
     ) {
         Gravity.getInstance()?.sendTransaction(
             GravityAuth("gravitysdkdemoapp://open"),
-            GravityTransaction(toAddress, BigDecimal(amount), thirdPartyAuthToken, transactionMeta)
+            GravityTransaction(
+                toAddress,
+                BigDecimal(amount),
+                thirdPartyAuthToken,
+                TransactionMeta(contractAddress, GravityConstants.GRAVITY_CONTRACT_METHOD_TRANSFER)
+            )
         )
     }
 

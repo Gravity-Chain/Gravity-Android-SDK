@@ -78,7 +78,10 @@ class Gravity(private val activity: Activity) {
         )) else null
     }
 
-    fun sendTransaction(gravityAuth: GravityAuth, gravityTransaction: GravityTransaction) {
+    fun sendTransaction(
+        gravityAuth: GravityAuth,
+        gravityTransaction: GravityTransaction,
+    ) {
         var intent: Intent? =
             activity.packageManager.getLaunchIntentForPackage(GRAVITY_WALLET_PACKAGE_NAME)
         if (intent == null) {
@@ -107,8 +110,8 @@ class Gravity(private val activity: Activity) {
         intent.putExtra(GRAVITY_WALLET_KEY_TRANSACTION_AMOUNT, gravityTransaction.amount)
         if (gravityTransaction.transactionMeta != null) {
             intent.putExtra(
-                GRAVITY_WALLET_KEY_TRANSACTION_META,
-                Gson().toJson(gravityTransaction.transactionMeta)
+                "transactionMeta",
+                Gson().toJson(gravityTransaction.transactionMeta).toString()
             )
         }
         activity.startActivity(intent)
