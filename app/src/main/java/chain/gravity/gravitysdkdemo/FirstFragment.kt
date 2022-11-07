@@ -118,7 +118,7 @@ class FirstFragment : Fragment() {
         }
 
         binding.cvSendTxnContract.button.text = "send contract transaction"
-        binding.cvSendTxnContract.tvB.text = "amount: 1GRT"
+        binding.cvSendTxnContract.tvB.text = "amount: 1 GRT"
         binding.cvSendTxnContract.tvB.visibility = View.VISIBLE
         binding.cvSendTxnContract.button.setOnClickListener {
             sendContractTestTransaction(

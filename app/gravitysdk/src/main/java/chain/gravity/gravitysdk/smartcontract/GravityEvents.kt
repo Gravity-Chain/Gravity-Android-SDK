@@ -10,6 +10,16 @@ class GravityEvents() {
     ) {
     }
 
+    fun increaseTotalSupply(
+        tokens: BigDecimal
+    ) {
+    }
+
+    fun decreaseTotalSupply(
+        tokens: BigDecimal
+    ) {
+    }
+
     fun approve(
         from: String,
         spender: String,

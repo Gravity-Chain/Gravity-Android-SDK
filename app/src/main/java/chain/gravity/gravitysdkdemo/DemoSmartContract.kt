@@ -61,8 +61,7 @@ class DemoSmartContract(
     ) {
         require(to != "0x00000000000000")
         require(_balances[to] != null)
-        tokenInfo._totalSupply = tokenInfo._totalSupply.add(value)
-        _balances[to] = _balances[to]!!.add(value)
+        gravityEvents.increaseTotalSupply(value)
         gravityEvents.transfer("0x00000000000000", to, value)
     }
 
@@ -72,9 +71,7 @@ class DemoSmartContract(
     ) {
         require(from != "0x00000000000000")
         require(_balances[from] != null)
-
-        tokenInfo._totalSupply = tokenInfo._totalSupply.minus(value);
-        _balances[from] = _balances[from]!!.minus(value);
+        gravityEvents.decreaseTotalSupply(value)
         gravityEvents.transfer(from, "0x00000000000000", value)
     }
 }
