@@ -1,18 +1,23 @@
 package xyz.gravitychain.gravitysdk.smartcontract
 
+import xyz.gravitychain.gravitysdk.smartcontract.annotations.Internal
 import xyz.gravitychain.gravitysdk.smartcontract.annotations.TokenInfo
 import java.math.BigDecimal
 
-interface GravityTokenInterface {
+interface GravityNFTInterface {
     val gravityEvents: GravityEvents
-    val _balances: MutableMap<String, BigDecimal>
-    val _allowed: MutableMap<String, MutableMap<String, BigDecimal>>
     var _totalSupply: BigDecimal
+    val _allTokens: MutableMap<BigDecimal, String>
+    val _allTokenOwnersMap: MutableMap<String, MutableList<BigDecimal>>
+    val _tokenURIs: MutableMap<BigDecimal, String>
+    val _allowed: MutableMap<String, MutableMap<String, BigDecimal>>
     val tokenInfo: TokenInfo
     fun totalSupply(): BigDecimal
     fun tokenName(): String
     fun tokenSymbol(): String
     fun balanceOf(tokenOwner: String): BigDecimal?
+    fun ownerOf(tokenId: BigDecimal): String
+    fun tokenURI(tokenId: BigDecimal): String
     fun allowance(
         tokenOwner: String,
         spender: String
@@ -30,6 +35,12 @@ interface GravityTokenInterface {
         tokens: BigDecimal
     ): Boolean
 
-    fun mint(to: String, value: BigDecimal)
-    fun burn(from: String, value: BigDecimal)
+    @Internal
+    fun _setTokenURI(tokenId: BigDecimal, tokenURI: String): Boolean
+
+    @Internal
+    fun _mint(to: String, tokenId: BigDecimal): Boolean
+
+    @Internal
+    fun _burn(from: String, tokenId: BigDecimal): Boolean
 }

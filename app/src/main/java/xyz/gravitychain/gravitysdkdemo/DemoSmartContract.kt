@@ -8,12 +8,13 @@ import java.math.BigDecimal
 class DemoSmartContract(
     override val gravityEvents: GravityEvents,
     override val _balances: MutableMap<String, BigDecimal>,
-    override val _allowed: MutableMap<String, MutableMap<String, BigDecimal>>,
+    override var _totalSupply: BigDecimal,
+    override val _allowed: MutableMap<String, MutableMap<String, BigDecimal>>
 ) : GravityTokenInterface {
     override val tokenInfo = TokenInfo("Demo Token", "DEMO", BigDecimal("10000000000000000"))
 
     override fun totalSupply(): BigDecimal {
-        return tokenInfo._totalSupply
+        return _totalSupply
     }
 
     override fun tokenName(): String {
@@ -41,6 +42,15 @@ class DemoSmartContract(
         tokens: BigDecimal
     ): Boolean {
         require(to != "0x00000000000000")
+        require(_balances[from] != null)
+        require(_balances[from]!! >= tokens)
+
+        _balances[from]?.minus(tokens)
+        if (_balances[to] != null) {
+            _balances[to] = _balances[to]!!.plus(tokens)
+        } else {
+            _balances[to] = tokens
+        }
         gravityEvents.transfer(from, to, tokens)
         return true
     }
@@ -51,6 +61,11 @@ class DemoSmartContract(
         tokens: BigDecimal
     ): Boolean {
         require(spender != "0x00000000000000")
+        if (_allowed[from] != null) {
+            _allowed[from]?.put(spender, tokens)
+        } else {
+            _allowed[from] = mutableMapOf(spender to tokens)
+        }
         gravityEvents.approve(from, spender, tokens)
         return true
     }
@@ -61,7 +76,12 @@ class DemoSmartContract(
     ) {
         require(to != "0x00000000000000")
         require(_balances[to] != null)
-        gravityEvents.increaseTotalSupply(value)
+        _totalSupply += value
+        if (_balances[to] != null) {
+            _balances[to] = value
+        } else {
+            _balances[to]?.plus(value)
+        }
         gravityEvents.transfer("0x00000000000000", to, value)
     }
 
@@ -71,7 +91,8 @@ class DemoSmartContract(
     ) {
         require(from != "0x00000000000000")
         require(_balances[from] != null)
-        gravityEvents.decreaseTotalSupply(value)
+        _balances[from]?.minus(value)
+        _totalSupply -= value
         gravityEvents.transfer(from, "0x00000000000000", value)
     }
 }
