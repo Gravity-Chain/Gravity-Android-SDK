@@ -7,11 +7,11 @@ import java.math.BigDecimal
 
 class DemoSmartContract(
     override val gravityEvents: GravityEvents,
-    override val _balances: MutableMap<String, BigDecimal>,
     override var _totalSupply: BigDecimal,
-    override val _allowed: MutableMap<String, MutableMap<String, BigDecimal>>
-) : GravityTokenInterface {
-    override val tokenInfo = TokenInfo("Demo Token", "DEMO", BigDecimal("10000000000000000"))
+    override val _balances: MutableMap<String, BigDecimal>,
+    override val _allowed: MutableMap<String, MutableMap<String, BigDecimal>>,
+    ) : GravityTokenInterface {
+    override val tokenInfo = TokenInfo("Demo Token", "DEMO")
 
     override fun totalSupply(): BigDecimal {
         return _totalSupply

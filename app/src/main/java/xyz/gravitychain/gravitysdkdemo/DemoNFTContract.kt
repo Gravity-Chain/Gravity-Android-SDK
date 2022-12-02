@@ -16,10 +16,10 @@ class DemoNFTContract(
     override val _tokenURIs: MutableMap<BigDecimal, String>,
     override val _allowed: MutableMap<String, MutableMap<String, BigDecimal>>
 ) : GravityNFTInterface {
-    override val tokenInfo = TokenInfo("Demo Gravity NFT", "DEMGRVTY", BigDecimal("500"))
+    override val tokenInfo = TokenInfo("Demo Gravity NFT", "DEMGRVTY")
 
     override fun totalSupply(): BigDecimal {
-        return tokenInfo._totalSupply
+        return _totalSupply
     }
 
     override fun tokenName(): String {
@@ -93,7 +93,7 @@ class DemoNFTContract(
         tokenId: BigDecimal
     ): Boolean {
         require(to != "0x00000000000000")
-        require(_allTokens.size.toBigDecimal() < tokenInfo._totalSupply)
+        require(_allTokens.size.toBigDecimal() < _totalSupply)
         require(_allTokens[tokenId] == null)
         _totalSupply++
         _allTokens[tokenId] = to
