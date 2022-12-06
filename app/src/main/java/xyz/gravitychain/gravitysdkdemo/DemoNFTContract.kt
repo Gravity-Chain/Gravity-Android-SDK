@@ -54,9 +54,22 @@ class DemoNFTContract(
     override fun transfer(
         from: String,
         to: String,
+        tokenId: BigDecimal,
         tokens: BigDecimal
     ): Boolean {
         require(to != "0x00000000000000")
+        require(_allTokens[tokenId] == null)
+        require(_allTokens[tokenId] == from)
+
+        if (_allTokenOwnersMap[from] != null) {
+            _allTokenOwnersMap[from]?.remove(tokenId)
+        }
+
+        if (_allTokenOwnersMap[to] != null) {
+            _allTokenOwnersMap[to]?.add(tokenId)
+        } else {
+            _allTokenOwnersMap[to] = mutableListOf(tokenId)
+        }
 
         if (tokens != BigDecimal.ZERO) {
             // 5% royalty
@@ -76,6 +89,7 @@ class DemoNFTContract(
     override fun approve(
         from: String,
         spender: String,
+        tokenId: BigDecimal,
         tokens: BigDecimal
     ): Boolean {
         require(spender != "0x00000000000000")
@@ -90,10 +104,11 @@ class DemoNFTContract(
 
     override fun _mint(
         to: String,
-        tokenId: BigDecimal
+        value: BigDecimal
     ): Boolean {
         require(to != "0x00000000000000")
         require(_allTokens.size.toBigDecimal() < _totalSupply)
+        val tokenId = _allTokens.size.toBigDecimal().inc()
         require(_allTokens[tokenId] == null)
         _totalSupply++
         _allTokens[tokenId] = to
@@ -102,7 +117,7 @@ class DemoNFTContract(
         } else {
             _allTokenOwnersMap[to] = mutableListOf(tokenId)
         }
-        gravityEvents.transfer("0x00000000000000", to, tokenId)
+        gravityEvents.transfer("0x00000000000000", to, value)
         return true
     }
 

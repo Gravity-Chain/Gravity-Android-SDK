@@ -26,12 +26,14 @@ interface GravityNFTInterface {
     fun transfer(
         from: String,
         to: String,
+        tokenId: BigDecimal,
         tokens: BigDecimal
     ): Boolean
 
     fun approve(
         from: String,
         spender: String,
+        tokenId: BigDecimal,
         tokens: BigDecimal
     ): Boolean
 
@@ -39,7 +41,7 @@ interface GravityNFTInterface {
     fun _setTokenURI(tokenId: BigDecimal, tokenURI: String): Boolean
 
     @Internal
-    fun _mint(to: String, tokenId: BigDecimal): Boolean
+    fun _mint(to: String, value: BigDecimal): Boolean
 
     @Internal
     fun _burn(from: String, tokenId: BigDecimal): Boolean
