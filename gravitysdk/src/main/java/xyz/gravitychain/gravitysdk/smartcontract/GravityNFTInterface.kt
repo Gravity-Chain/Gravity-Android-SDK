@@ -38,10 +38,7 @@ interface GravityNFTInterface {
     ): Boolean
 
     @Internal
-    fun _setTokenURI(tokenId: BigDecimal, tokenURI: String): Boolean
-
-    @Internal
-    fun _mint(to: String, value: BigDecimal): Boolean
+    fun _mint(tokenURI: String, value: BigDecimal): Boolean
 
     @Internal
     fun _burn(from: String, tokenId: BigDecimal): Boolean

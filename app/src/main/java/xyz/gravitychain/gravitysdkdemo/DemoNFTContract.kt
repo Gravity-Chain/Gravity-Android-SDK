@@ -97,27 +97,23 @@ class DemoNFTContract(
         return true
     }
 
-    override fun _setTokenURI(tokenId: BigDecimal, tokenURI: String): Boolean {
-        _tokenURIs[tokenId] = tokenURI
-        return true
-    }
-
     override fun _mint(
-        to: String,
+        tokenURI: String,
         value: BigDecimal
     ): Boolean {
-        require(to != "0x00000000000000")
         require(_allTokens.size.toBigDecimal() < _totalSupply)
         val tokenId = _allTokens.size.toBigDecimal().inc()
         require(_allTokens[tokenId] == null)
         _totalSupply++
-        _allTokens[tokenId] = to
-        if (_allTokenOwnersMap[to] != null) {
-            _allTokenOwnersMap[to]?.add(tokenId)
+        val contractOwner = "0x2aa10805466ea0b93333dc96f4a477c8420834af"
+        _allTokens[tokenId] = contractOwner
+        if (_allTokenOwnersMap[contractOwner] != null) {
+            _allTokenOwnersMap[contractOwner]?.add(tokenId)
         } else {
-            _allTokenOwnersMap[to] = mutableListOf(tokenId)
+            _allTokenOwnersMap[contractOwner] = mutableListOf(tokenId)
         }
-        gravityEvents.transfer("0x00000000000000", to, value)
+        _tokenURIs[tokenId] = tokenURI
+        gravityEvents.transfer("0x00000000000000", contractOwner, value)
         return true
     }
 
