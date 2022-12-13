@@ -16,7 +16,7 @@ class DemoNFTContract(
     override val _tokenURIs: MutableMap<BigDecimal, String>,
     override val _allowed: MutableMap<String, MutableMap<String, BigDecimal>>
 ) : GravityNFTInterface {
-    override val tokenInfo = TokenInfo("Demo Gravity NFT", "DEMGRVTY")
+    override val tokenInfo = TokenInfo("Early Access Gravity NFT", "EAGRT")
 
     override fun totalSupply(): BigDecimal {
         return _totalSupply
@@ -58,18 +58,27 @@ class DemoNFTContract(
         tokens: BigDecimal
     ): Boolean {
         require(to != "0x00000000000000")
-        require(_allTokens[tokenId] == null)
+        // validate the sender has the NFT
         require(_allTokens[tokenId] == from)
+
+        // validate the receiver only holds one early access NFT
+        require(_allTokenOwnersMap[to] == null)
+        _allTokenOwnersMap[to] = mutableListOf(tokenId)
+
+        // OR open logic to hold as many NFTs as needed
+        /**
+        if (_allTokenOwnersMap[to] != null) {
+        _allTokenOwnersMap[to]?.add(tokenId)
+        } else {
+        _allTokenOwnersMap[to] = mutableListOf(tokenId)
+        }
+         */
 
         if (_allTokenOwnersMap[from] != null) {
             _allTokenOwnersMap[from]?.remove(tokenId)
         }
 
-        if (_allTokenOwnersMap[to] != null) {
-            _allTokenOwnersMap[to]?.add(tokenId)
-        } else {
-            _allTokenOwnersMap[to] = mutableListOf(tokenId)
-        }
+        _allTokens[tokenId] = to
 
         if (tokens != BigDecimal.ZERO) {
             // 5% royalty
@@ -77,7 +86,7 @@ class DemoNFTContract(
             gravityEvents.transfer(from, to, tokens - royaltyAmount)
             gravityEvents.transfer(
                 from,
-                "0x2aa10805466ea0b93333dc96f4a477c8420834af",
+                to,
                 royaltyAmount
             )
         } else {
@@ -105,7 +114,7 @@ class DemoNFTContract(
         val tokenId = _allTokens.size.toBigDecimal().inc()
         require(_allTokens[tokenId] == null)
         _totalSupply++
-        val contractOwner = "0x2aa10805466ea0b93333dc96f4a477c8420834af"
+        val contractOwner = "0x44decbb8c66516d1c062e24a25c38a9bf5cbcde9"
         _allTokens[tokenId] = contractOwner
         if (_allTokenOwnersMap[contractOwner] != null) {
             _allTokenOwnersMap[contractOwner]?.add(tokenId)
